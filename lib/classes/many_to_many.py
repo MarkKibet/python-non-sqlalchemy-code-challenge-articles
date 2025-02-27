@@ -1,10 +1,12 @@
 class Article:
+    all =[]
     def __init__(self, author, magazine, title):
         self.author = author
         self.magazine = magazine
         self.title = title
         author._articles.append(self)
         magazine._articles.append(self)
+        Article.all.append(self)
 
     @property
     def title(self):
@@ -15,7 +17,8 @@ class Article:
         if isinstance(new_title, str) and 5 <= len(new_title) <= 50:
             self._title = new_title
         else:
-            raise ValueError("THe title ought be be a string between 5 and 50 characters")
+            raise ValueError("The title ought to be a string between 5 and 50 characters")
+       
 
     @property
     def author(self):
@@ -26,7 +29,7 @@ class Article:
         if isinstance(new_author, Author):
             self._author = new_author
         else:
-            raise ValueError("THe author ought to be an instance of the Author class")
+            raise ValueError("The author ought to be an instance of the Author class")
 
     @property
     def magazine(self):
@@ -44,12 +47,19 @@ class Author:
     def __init__(self, name):
         if not isinstance(name, str) or len(name) == 0:
             raise ValueError("the name written should be a non-empty string")
-        self._name = name
+        self.name = name
         self._articles = []
 
     @property
     def name(self):
         return self._name
+    
+    @name.setter
+    def name(self, new_name):
+        if hasattr(self,"_name"):
+            raise AttributeError("Name cannot be changed, Already instantiated")
+        else:
+            self._name = new_name
 
     def articles(self):
         return self._articles
@@ -68,8 +78,7 @@ class Author:
 
 class Magazine:
     def __init__(self, name, category):
-        if not isinstance(name, str) or not (2 <= len(name) <= 16):
-            raise ValueError("Have the name as a string between 2 and 16 characters")
+       
         if not isinstance(category, str) or len(category) == 0:
             raise ValueError("With category, it should be a non-empty string")
         self._name = name
@@ -82,10 +91,12 @@ class Magazine:
 
     @name.setter
     def name(self, new_name):
-        if isinstance(new_name, str) and 2 <= len(new_name) <= 16:
-            self._name = new_name
-        else:
-            raise ValueError("Have the name as a a string between 2 and 16 characters")
+        if isinstance(new_name, str):
+            if 2 <= len(new_name) <= 16:
+                self._name = new_name
+            else:
+                raise ValueError("Have the name as a string between 2 and 16 characters")
+       
 
     @property
     def category(self):
@@ -93,10 +104,12 @@ class Magazine:
 
     @category.setter
     def category(self, new_category):
-        if isinstance(new_category, str) and len(new_category) > 0:
-            self._category = new_category
-        else:
-            raise ValueError("THe category should be non-empty string")
+        if isinstance(new_category, str):
+            if len(new_category) > 0:
+                self._category = new_category
+            else:
+                raise ValueError("The category should be a non-empty string")
+       
 
     def articles(self):
         return self._articles
